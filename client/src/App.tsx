@@ -16,7 +16,7 @@ function App() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/posts');
+        const response = await axios.get('http://localhost:4001/query');
         setPosts(response.data);
         console.log(response);
       } catch (error) {

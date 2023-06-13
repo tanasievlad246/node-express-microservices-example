@@ -33,7 +33,7 @@ app.post('/posts/:id/comments', async (req, res) => {
                 postId: req.params.id
             }
         })
-        res.status(201).json(comments);
+        res.status(201).json({ id: commentId, content });
     } catch (error) {
        console.log(error);
     }

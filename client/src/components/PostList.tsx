@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import Post from "./Post";
 
 interface PostListProps {
@@ -11,6 +11,9 @@ interface PostListProps {
 }
 
 const PostList: FC<PostListProps> = ({ posts }) => {
+    useEffect(() => {
+        console.log(posts)
+    }, []);
     return (
         <div style={{
             display: 'flex',
@@ -27,7 +30,7 @@ const PostList: FC<PostListProps> = ({ posts }) => {
                 
             }}>
                 {Object.values(posts).map((post: any) => (
-                   <Post key={post.id} id={post.id} title={post.title} /> 
+                   <Post key={post.id} id={post.id} title={post.title} comments={post.comments} /> 
                 ))}
             </div>
         </div>

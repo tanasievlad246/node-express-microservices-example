@@ -4,10 +4,11 @@ import { FC, useEffect, useState } from "react";
 interface PostProps {
     title: string;
     id: string;
+    comments: []
 }
 
-const Post: FC<PostProps> = ({ title, id }) => {
-    const [comments, setComments] = useState<{
+const Post: FC<PostProps> = ({ title, id, comments }) => {
+    const [userComments, setUserComments] = useState<{
         [key: string]: {
             id: string;
             content: string;
@@ -16,29 +17,21 @@ const Post: FC<PostProps> = ({ title, id }) => {
 
     const [comment, setComment] = useState('');
 
-    const fetchComments = async () => {
-        try {
-            const response = await axios.get(`http://localhost:4010/posts/${id}/comments`);
-            setComments(response.data);
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
     const submitComment = async () => {
         try {
-            await axios.post(`http://localhost:4010/posts/${id}/comments`, {
+            const results = await axios.post(`http://localhost:4011/posts/${id}/comments`, {
                 content: comment
             });
             setComment('');
-            fetchComments();
+            console.log(results)
+            setUserComments([...userComments, results.data]);
         } catch (error) {
             console.log(error);
         }
     }
 
     useEffect(() => {
-        fetchComments();
+        setUserComments(comments);
     }, []);
 
     return (
@@ -47,7 +40,7 @@ const Post: FC<PostProps> = ({ title, id }) => {
             <input type="text" placeholder="comment" value={comment} onChange={e => setComment(e.target.value)}/>
             <button style={{marginTop: '5px'}} onClick={submitComment}>Submit</button>
             <br />
-            {comments.map((comment: any) => <div key={comment.id}>{comment.content}</div>)}
+            {userComments.map((comment: any) => <div key={comment.id}>{comment.content}</div>)}
         </div>
     )
 
