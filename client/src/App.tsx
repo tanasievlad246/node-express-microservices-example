@@ -1,24 +1,61 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useEffect, useState } from "react";
+import PostCreate from "./components/PostCreate";
+import PostList from "./components/PostList";
+import axios from "axios";
 
 function App() {
+  const [posts, setPosts] = useState<{
+    [key: string]: {
+      id: string;
+      title: string;
+    }
+  }>({});
+
+  const [title, setTitle] = useState('');
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const response = await axios.get('http://localhost:3001/posts');
+        setPosts(response.data);
+        console.log(response);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    fetchPosts();
+  }, []);
+
+
+  const submitPost = async () => {
+    try {
+      const response = await axios.post('http://localhost:3001/posts', {
+          title
+      }); 
+      setTitle('');
+      console.log(response.data);
+      posts[response.data.id] = response.data;
+    } catch (error) {
+      console.log(error); 
+    }
+  }
+
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTitle(e.target.value);
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <PostCreate 
+        title={title}
+        submit={submitPost}
+        handleChange={handleTitleChange}
+      />
+      <br />
+      <PostList
+        posts={posts}
+      />
     </div>
   );
 }

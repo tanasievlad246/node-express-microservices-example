@@ -2,8 +2,10 @@ const express = require('express');
 const app = express();
 const { randomBytes } = require('crypto');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 
 app.use(bodyParser.json());
+app.use(cors());
 
 const posts = {};
 
@@ -22,6 +24,6 @@ app.post('/posts', (req, res) => {
     })
 });
 
-app.listen(3000, () => {
-    console.log('posts server listening on port 3000');
+app.listen(3001, () => {
+    console.log('posts server listening on port 3001');
 });
