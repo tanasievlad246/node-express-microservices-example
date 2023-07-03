@@ -25,6 +25,7 @@ const Post: FC<PostProps> = ({ title, id, comments }) => {
             setComment('');
             console.log(results)
             setUserComments([...userComments, results.data]);
+            console.log('userComments', userComments)
         } catch (error) {
             console.log(error);
         }
@@ -40,7 +41,9 @@ const Post: FC<PostProps> = ({ title, id, comments }) => {
             <input type="text" placeholder="comment" value={comment} onChange={e => setComment(e.target.value)}/>
             <button style={{marginTop: '5px'}} onClick={submitComment}>Submit</button>
             <br />
-            {userComments.map((comment: any) => <div key={comment.id}>{comment.content}</div>)}
+            {userComments?.map((comment: any) => <div key={comment.id}>{
+                comment.status === 'pending' ? 'This comment is awaiting moderation' : comment.status === 'rejected' ? 'This comment is rejected' : comment.content
+            }</div>)}
         </div>
     )
 

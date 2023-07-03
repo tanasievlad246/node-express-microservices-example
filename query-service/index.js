@@ -24,17 +24,22 @@ app.get('/query/:id', (req, res) => {
 app.post('/events', async (req, res) => {
     console.log('events query')
     const { type, data } = req.body;
-    switch (type) {
-        case 'PostCreated':
-            const { id, title } = data;
-            postsWithComments[id] = { id, title, comments: [] };
-            break;
-        case 'CommentCreated':
-            const { id: commentId, content, postId } = data;
-            postsWithComments[postId].comments.push({ id: commentId, content });
-            break;
+  
+    if (type === 'PostCreated') {
+        const { id, title } = data;
+        postsWithComments[id] = { id, title, comments: [] };
     }
-    console.log(postsWithComments);
+    if (type === 'CommentCreated') {
+        const { id: commentId, content, postId, status } = data;
+        postsWithComments[postId].comments.push({ id: commentId, content, status });
+    }
+    if (type === 'CommentUpdated') {
+        const { id, content, postId, status } = data;
+        const comment = postsWithComments[postId].comments.find(comment => comment.id === id);
+        comment.status = status;
+        comment.content = content;
+    }
+    
     res.status(200).send(postsWithComments[data.id]);
 });
 
