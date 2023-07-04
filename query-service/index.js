@@ -11,20 +11,7 @@ app.use(express.json());
 
 app.use(cors());
 
-app.get('/query', (req, res) => {
-    console.log(postsWithComments);
-    res.status(200).send(postsWithComments);
-});
-
-app.get('/query/:id', (req, res) => {
-    console.log(postsWithComments[req.params.id])
-    res.status(200).send(postsWithComments[req.params.id]);
-});
-
-app.post('/events', async (req, res) => {
-    console.log('events query')
-    const { type, data } = req.body;
-  
+const handleEvents = (type, data) => {
     if (type === 'PostCreated') {
         const { id, title } = data;
         postsWithComments[id] = { id, title, comments: [] };
@@ -39,11 +26,34 @@ app.post('/events', async (req, res) => {
         comment.status = status;
         comment.content = content;
     }
+}
+
+app.get('/query', (req, res) => {
+    console.log(postsWithComments);
+    res.status(200).send(postsWithComments);
+});
+
+app.get('/query/:id', (req, res) => {
+    console.log(postsWithComments[req.params.id])
+    res.status(200).send(postsWithComments[req.params.id]);
+});
+
+app.post('/events', async (req, res) => {
+    console.log('events query')
+    const { type, data } = req.body;
+  
+    handleEvents(type, data);    
     
     res.status(200).send(postsWithComments[data.id]);
 });
 
 
-app.listen(4001, () => {
+app.listen(4001, async () => {
     console.log('Query service Listening on 4001');
+
+    const events = await axios.get('http://localhost:4009/events');
+    for (let event of events.data) {
+        console.log('Processing event:', event.type);
+        handleEvents(event.type, event.data);
+    }
 });
