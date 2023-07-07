@@ -1,43 +1,46 @@
 const express = require('express');
-const app = express();
-const { randomBytes } = require('crypto');
 const bodyParser = require('body-parser');
+const { randomBytes } = require('crypto');
 const cors = require('cors');
 const axios = require('axios');
 
+const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
 const posts = {};
 
 app.get('/posts', (req, res) => {
-   res.json(posts);
+  res.send(posts);
 });
 
 app.post('/posts', async (req, res) => {
-    try {
-        const id = randomBytes(4).toString('hex');
-        const { title } = req.body;
-        posts[id] = {
-            id, title
-        };
-        await axios.post('http://localhost:4009/events', {
-            type: 'PostCreated',
-            data: posts[id]
-        })
-        res.json({
-            id, title
-        })
-    } catch (error) {
-        console.log(error); 
-    } 
+  const id = randomBytes(4).toString('hex');
+  const { title } = req.body;
+
+  posts[id] = {
+    id,
+    title
+  };
+
+  await axios.post('http://localhost:4005/events', {
+    type: 'PostCreated',
+    data: {
+      id,
+      title
+    }
+  });
+
+  res.status(201).send(posts[id]);
 });
 
 app.post('/events', (req, res) => {
-    console.log('Event received', req.body.type);
-    res.send({});
+  console.log('Received Event', req.body.type);
+
+  res.send({});
 });
 
-app.listen(3001, () => {
-    console.log('posts server listening on port 3001');
+app.listen(4000, () => {
+  console.log('update I made 2');
+  console.log('Listening on 4000');
 });
