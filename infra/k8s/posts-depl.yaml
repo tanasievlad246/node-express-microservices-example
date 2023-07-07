@@ -14,4 +14,18 @@ spec:
     spec:
       containers:
         - name: posts
-          image: vladtanasie/posts:0.0.3
+          image: vlad246/posts
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: posts-cluster-srv
+spec:
+  type: ClusterIP
+  selector:
+    app: posts
+  ports:
+    - name: posts
+      protocol: TCP
+      port: 4000
+      targetPort: 4000
