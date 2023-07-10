@@ -30,7 +30,7 @@ spec:
                 port: 
                   number: 4001
             pathType: ImplementationSpecific
-          - path: /?(.*)
+          - path: /client
             backend:
               service:
                 name: client-cluster-srv
