@@ -9,10 +9,31 @@ spec:
     - host: posts.com
       http:
         paths:
-          - path: /posts
+          - path: /posts/create
             backend:
               service:
                 name: posts-cluster-srv
                 port: 
                   number: 4000
+            pathType: ImplementationSpecific
+          - path: /posts
+            backend:
+              service:
+                name: query-cluster-srv
+                port: 
+                  number: 4002
+            pathType: ImplementationSpecific
+          - path: /posts/?(.*)/comments
+            backend:
+              service:
+                name: comments-cluster-srv
+                port: 
+                  number: 4001
+            pathType: ImplementationSpecific
+          - path: /?(.*)
+            backend:
+              service:
+                name: client-cluster-srv
+                port: 
+                  number: 3000
             pathType: ImplementationSpecific
