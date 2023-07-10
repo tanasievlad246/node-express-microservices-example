@@ -19,7 +19,7 @@ const Post: FC<PostProps> = ({ title, id, comments }) => {
 
     const submitComment = async () => {
         try {
-            const results = await axios.post(`http://localhost:4011/posts/${id}/comments`, {
+            const results = await axios.post(`http://posts.com/posts/${id}/comments`, {
                 content: comment
             });
             setComment('');

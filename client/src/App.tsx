@@ -16,7 +16,7 @@ function App() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await axios.get('http://localhost:4001/query');
+        const response = await axios.get('http://posts.com/query');
         setPosts(response.data);
         console.log(response);
       } catch (error) {
@@ -30,7 +30,7 @@ function App() {
 
   const submitPost = async () => {
     try {
-      const response = await axios.post('http://localhost:3001/posts', {
+      const response = await axios.post('http://posts.com/posts', {
           title
       }); 
       setTitle('');
