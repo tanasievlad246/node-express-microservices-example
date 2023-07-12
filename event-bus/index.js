@@ -25,5 +25,6 @@ app.get('/events', (req, res) => {
 });
 
 app.listen(4005, () => {
+  console.log('Events bus started')
   console.log('Listening on 4005');
 });

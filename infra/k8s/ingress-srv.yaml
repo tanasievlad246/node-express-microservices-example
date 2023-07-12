@@ -15,25 +15,25 @@ spec:
                 name: posts-cluster-srv
                 port: 
                   number: 4000
-            pathType: ImplementationSpecific
+            pathType: Prefix
           - path: /posts
             backend:
               service:
                 name: query-cluster-srv
                 port: 
                   number: 4002
-            pathType: ImplementationSpecific
+            pathType: Prefix
           - path: /posts/?(.*)/comments
             backend:
               service:
                 name: comments-cluster-srv
                 port: 
                   number: 4001
-            pathType: ImplementationSpecific
+            pathType: Prefix
           - path: /client
             backend:
               service:
                 name: client-cluster-srv
                 port: 
                   number: 3000
-            pathType: ImplementationSpecific
+            pathType: Prefix
